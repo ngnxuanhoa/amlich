@@ -195,9 +195,22 @@ def L2S(lunarD, lunarM, lunarY, lunarLeap, tZ = 7):
   monthStart = getNewMoonDay(k + off, tZ)
   return jdToDate(monthStart + lunarD - 1)
 
-ndd = 19
-nmm = 6
-nyy = 2020
+def getGioHoangDao(jd):
+  GIO_HD = ("110100101100", "001101001011", "110011010010", "101100110100", "001011001101", "010010110011")
+  CHI = ("T\375", "S\u1EEDu", "D\u1EA7n", "M\343o", "Th\354n", "T\u1EF5", "Ng\u1ECD", "M\371i", "Th\342n", "D\u1EADu", "Tu\u1EA5t", "H\u1EE3i")
+  chiOfDay = (jd+1)%12
+  gioHD = GIO_HD[chiOfDay%6]
+  ret = ""
+  count = 0
+  for i in range(0,12):
+	  if (gioHD[i] == '1'):
+		  ret += CHI[i];
+		  ret += ' ('+str((i*2+23)%24)+'-'+str((i*2+1)%24)+')'+', ';  
+  return ret
+from datetime import datetime
+ndd = datetime.now().day
+nmm = datetime.now().month
+nyy = datetime.now().year
 
 amlich = S2L(ndd,nmm,nyy)
 jN = jdFromDate(ndd,nmm,nyy)
@@ -209,6 +222,7 @@ aNhuan = amlich[3]
 Can = ("Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ")
 Chi = ("Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi")
 Thu = ("Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN")
+Gio = ("Giáp", "Bính", "Mậu", "Canh", "Nhâm")
 
 thu = Thu[jN%7]
 cThang = Can[(aNam*12+aThang+7)%10]
@@ -217,6 +231,9 @@ cNam = Can[(aNam) % 10]
 iNam = Chi[(aNam+8)%12]
 cDay = Can[(jN+3)%10]
 iDay = Chi[(jN+1)%12]
+cGio = Gio[(jN+4)%5]
+ngayDep = getGioHoangDao(jN)
+
 if aNhuan == 0:
 	txtThang = "Tháng: {} {}"
 else:
@@ -229,3 +246,7 @@ print(thu)
 print(txtNgay.format(cDay,iDay))
 print(txtThang.format(cThang,iThang))
 print(txtNam.format(cNam,iNam))
+print("Giờ: " + str(cGio) + " Tý")
+print(ngayDep)
+lyy = datetime.now()
+print(lyy)
